@@ -46,16 +46,25 @@
     /* Card solo come contenitore, SENZA pannello */
     .card {
       width: 100%;
-      max-width: 320px;          /* larghezza complessiva contenuti */
+      max-width: 320px;
       margin: 0 auto;
       padding: 8px 0 10px;
-      background: transparent;   /* niente riquadro */
+      background: transparent;
       box-shadow: none;
       border-radius: 0;
       text-align: center;
     }
 
-    /* Titolo e sottotitolo leggibili sullo sfondo */
+    /* AVVISO */
+    .warning {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #ef4444;
+      margin-bottom: 0.4rem;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Titolo e sottotitolo */
     h1 {
       font-size: 1.35rem;
       margin: 0 0 0.25rem;
@@ -76,8 +85,8 @@
       justify-content: flex-start;
       gap: 10px;
       width: 100%;
-      max-width: 260px;          /* larghezza reale bottone */
-      margin: 0.35rem auto;      /* centrati dentro la card */
+      max-width: 260px;
+      margin: 0.35rem auto;
       padding: 0.65rem 0.9rem;
       border-radius: 999px;
       text-decoration: none;
@@ -99,17 +108,15 @@
       flex: 1;
     }
 
-    /* Colori specifici per ogni app */
+    /* Colori */
     .wikiloc   { background: #19a974; color: #021b12; }
     .komoot    { background: #5bcc43; color: #052e16; }
     .outdoor   { background: #2563eb; color: #eff6ff; }
     .alltrails { background: #0f766e; color: #ecfdf5; }
     .pdf       { background: #f97316; color: #3b0b00; }
-
-    /* NUOVO: Diario */
     .diario    { background: #a855f7; color: #14001f; }
 
-    /* Nota in fondo, discreta */
+    /* Nota */
     .note {
       margin-top: 0.9rem;
       font-size: 0.75rem;
@@ -124,7 +131,11 @@
 
   <div class="page">
     <div class="card">
-      <h1>Due Passi in Paradiso - DEMO</h1>
+
+      <!-- AVVISO -->
+      <div class="warning">SITO IN FASE DI ELABORAZIONE</div>
+
+      <h1>Due Passi in Paradiso</h1>
       <p class="subtitle">Apri il percorso nella tua app preferita.</p>
 
       <!-- WIKILOC -->
@@ -137,7 +148,7 @@
 
       <!-- KOMOOT -->
       <a class="btn komoot"
-         href="https://www.komoot.com/it-IT/tour/2712412082?ref=itd&share_token=aN7LhZNtPcZ8OQvTusVuZf0agaGjcUqTb3iOf64wgYvYfvfYBl&ref=its"
+         href="https://www.komoot.com/it-IT/tour/2712412082"
          target="_blank" rel="noopener">
         <img class="logo" src="img/komoot.jpg" alt="Komoot" />
         <span class="label">Apri in Komoot</span>
@@ -145,7 +156,7 @@
 
       <!-- OUTDOORACTIVE -->
       <a class="btn outdoor"
-         href="https://www.outdooractive.com/it/r/331372831?share=%7E33nt3y4k%244osswrsc&utm_source=unknown&utm_medium=social&utm_campaign=user-shared-social-content"
+         href="https://www.outdooractive.com/it/r/331372831"
          target="_blank" rel="noopener">
         <img class="logo" src="img/outdooractive.png" alt="Outdooractive" />
         <span class="label">Apri in Outdooractive</span>
@@ -164,7 +175,7 @@
         <span class="label">Scheda PDF del percorso</span>
       </a>
 
-      <!-- NUOVO: DIARIO DELLE MEMORIE -->
+      <!-- DIARIO -->
       <a class="btn diario" href="diario.html">
         <span class="label">Diario delle Memorie</span>
       </a>
@@ -173,6 +184,7 @@
         I link aprono lo stesso itinerario su app diverse.<br>
         Salva il percorso nell’app per usarlo offline.
       </p>
+
     </div>
   </div>
 </body>
