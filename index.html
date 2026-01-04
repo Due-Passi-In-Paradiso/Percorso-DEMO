@@ -64,11 +64,19 @@
       text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
     }
 
-    /* Titolo e sottotitolo */
+    /* Titolo e sottotitoli */
     h1 {
-      font-size: 1.35rem;
-      margin: 0 0 0.25rem;
+      font-size: 1.6rem; /* <-- PIÙ GRANDE */
+      margin: 0 0 0.35rem;
       text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    }
+
+    .dedica {
+      font-size: 0.85rem;
+      margin: 0 0 0.9rem;
+      color: #e5e7eb;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+      line-height: 1.25;
     }
 
     .subtitle {
@@ -111,10 +119,15 @@
     /* Colori */
     .wikiloc   { background: #19a974; color: #021b12; }
     .komoot    { background: #5bcc43; color: #052e16; }
-    .outdoor   { background: #2563eb; color: #eff6ff; }
     .alltrails { background: #0f766e; color: #ecfdf5; }
+    .gaia      { background: #2563eb; color: #eff6ff; }  /* Gaia GPS (ex Outdooractive) */
     .pdf       { background: #f97316; color: #3b0b00; }
     .diario    { background: #a855f7; color: #14001f; }
+
+    /* Spazio leggero prima dei bottoni finali */
+    .divider-space {
+      height: 10px;
+    }
 
     /* Nota */
     .note {
@@ -136,9 +149,16 @@
       <div class="warning">SITO IN FASE DI ELABORAZIONE</div>
 
       <h1>Due Passi in Paradiso</h1>
-      <p class="subtitle">Apri il percorso nella tua app preferita.</p>
 
-      <!-- WIKILOC -->
+      <!-- NUOVO SOTTOTITOLO / DEDICA -->
+      <p class="dedica">
+        Percorso dedicato alla memoria di Don Pasquale Beretta che tanto amò e ci insegnò ad amare questi meravigliosi luoghi: il suo Paradiso!
+      </p>
+
+      <!-- SUBTITLE MODIFICATA -->
+      <p class="subtitle">Apri il percorso nella tua app preferita e salvalo per l'utilizzo offline.</p>
+
+      <!-- 1) WIKILOC -->
       <a class="btn wikiloc"
          href="https://loc.wiki/t/243279196?h=gpg7w6g6lp&wa=so&la=it"
          target="_blank" rel="noopener">
@@ -146,29 +166,32 @@
         <span class="label">Apri in Wikiloc</span>
       </a>
 
-      <!-- KOMOOT -->
+      <!-- 2) KOMOOT -->
       <a class="btn komoot"
-         href="https://www.komoot.com/it-IT/tour/2712412082"
+         href="https://www.komoot.com/it-IT/tour/2712412082?ref=itd&share_token=aN7LhZNtPcZ8OQvTusVuZf0agaGjcUqTb3iOf64wgYvYfvfYBl&ref=its"
          target="_blank" rel="noopener">
         <img class="logo" src="img/komoot.jpg" alt="Komoot" />
         <span class="label">Apri in Komoot</span>
       </a>
 
-      <!-- OUTDOORACTIVE -->
-      <a class="btn outdoor"
-         href="https://www.outdooractive.com/it/r/331372831"
-         target="_blank" rel="noopener">
-        <img class="logo" src="img/outdooractive.png" alt="Outdooractive" />
-        <span class="label">Apri in Outdooractive</span>
-      </a>
-
-      <!-- ALLTRAILS -->
+      <!-- 3) ALLTRAILS -->
       <a class="btn alltrails"
          href="https://www.alltrails.com/IL_TUO_LINK"
          target="_blank" rel="noopener">
         <img class="logo" src="img/alltrails.jpg" alt="AllTrails" />
         <span class="label">Apri in AllTrails</span>
       </a>
+
+      <!-- 4) GAIA GPS (sostituisce Outdooractive) -->
+      <a class="btn gaia"
+         href="https://www.gaiagps.com/IL_TUO_LINK"
+         target="_blank" rel="noopener">
+        <img class="logo" src="img/gaia.png" alt="Gaia GPS" />
+        <span class="label">Apri in Gaia GPS</span>
+      </a>
+
+      <!-- Spazio leggero -->
+      <div class="divider-space"></div>
 
       <!-- PDF -->
       <a class="btn pdf" href="percorso.pdf" target="_blank" rel="noopener">
@@ -180,9 +203,9 @@
         <span class="label">Diario delle Memorie</span>
       </a>
 
+      <!-- NOTA SOSTITUITA -->
       <p class="note">
-        I link aprono lo stesso itinerario su app diverse.<br>
-        Salva il percorso nell’app per usarlo offline.
+        Dicitura in fase di definizione. Volendo può essere completamente rimossa
       </p>
 
     </div>
