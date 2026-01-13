@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Diario delle Memorie – Due Passi in Paradiso</title>
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+      position: relative;
+    }
+
+    /* Sfondo generale */
+    .bg {
+      position: fixed;
+      inset: 0;
+      background: url("img/sfondo.png") center center / cover no-repeat;
+      filter: blur(5px);
+      transform: scale(1.05);
+      z-index: -1;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      box-sizing: border-box;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    }
+
+    /* ===== BOTTONI GRANDI ===== */
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .choice {
+      position: relative;
+      height: 180px;
+      border-radius: 26px;
+      overflow: hidden;
+      text-decoration: none;
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(0,0,0,0.45);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .choice::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.75);
+      z-index: 0;
+    }
+
+    .choice.memorie::before {
+      background-image: url("img/memorie.jpg");
+    }
+
+    .choice.foto::before {
+      background-image: url("img/foto.jpg");
+    }
+
+    .choice-content {
+      position: relative;
+      z-index: 1;
+      padding: 14px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .choice-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      opacity: 0.9;
+      text-align: left;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    }
+
+    /* Bottone + */
+    .choice-action {
+      align-self: flex-start;
+      background: rgba(15, 23, 42, 0.85);
+      padding: 6px 10px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+    }
+
+    .plus {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #22c55e;
+      color: #052e16;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      line-height: 1;
+    }
+
+    /* Torna alla home */
+    .home {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.65);
+      color: #e5e7eb;
+      text-decoration: none;
+      font-size: 0.85rem;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg"></div>
+
+  <div class="page">
+    <div class="card">
+      <h1>Diario delle Memorie</h1>
+
+      <div class="choices">
+        <!-- MEMORIE -->
+        <a class="choice memorie" href="#">
+          <div class="choice-content">
+            <div class="choice-title">Memorie</div>
+            <div class="choice-action">
+              <div class="plus">+</div>
+              <span>Scrivi un tuo ricordo</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- ALBUM FOTOGRAFICO -->
+        <a class="choice foto" href="#">
+          <div class="choice-content">
+            <div class="choice-title">Album Fotografico</div>
+            <div class="choice-action">
+              <div class="plus">+</div>
+              <span>Aggiungi le tue foto</span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <a class="home" href="index.html">← Torna alla home</a>
+    </div>
+  </div>
+</body>
+</html>
