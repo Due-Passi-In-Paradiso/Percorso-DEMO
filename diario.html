@@ -21,7 +21,6 @@
       position: relative;
     }
 
-    /* Sfondo generale */
     .bg {
       position: fixed;
       inset: 0;
@@ -52,7 +51,6 @@
       text-shadow: 0 2px 6px rgba(0,0,0,0.6);
     }
 
-    /* ===== BOTTONI GRANDI ===== */
     .choices {
       display: grid;
       grid-template-columns: 1fr;
@@ -83,13 +81,8 @@
       z-index: 0;
     }
 
-    .choice.memorie::before {
-      background-image: url("img/memorie.jpg");
-    }
-
-    .choice.foto::before {
-      background-image: url("img/foto.jpg");
-    }
+    .choice.memorie::before { background-image: url("img/memorie.jpg"); }
+    .choice.foto::before    { background-image: url("img/foto.jpg"); }
 
     .choice-content {
       position: relative;
@@ -109,7 +102,6 @@
       text-shadow: 0 2px 6px rgba(0,0,0,0.6);
     }
 
-    /* Bottone + */
     .choice-action {
       align-self: flex-start;
       background: rgba(15, 23, 42, 0.85);
@@ -137,7 +129,6 @@
       line-height: 1;
     }
 
-    /* Torna alla home */
     .home {
       display: inline-block;
       margin-top: 6px;
@@ -160,8 +151,10 @@
       <h1>Diario delle Memorie</h1>
 
       <div class="choices">
-        <!-- MEMORIE -->
-        <a class="choice memorie" href="#">
+        <!-- MEMORIE: link al modulo "Ricordi" (NO LOGIN) -->
+        <a class="choice memorie"
+           href="URL_TALLY_RICORDO"
+           target="_blank" rel="noopener">
           <div class="choice-content">
             <div class="choice-title">Memorie</div>
             <div class="choice-action">
@@ -171,8 +164,10 @@
           </div>
         </a>
 
-        <!-- ALBUM FOTOGRAFICO -->
-        <a class="choice foto" href="#">
+        <!-- ALBUM FOTOGRAFICO: link al modulo "Foto" (NO LOGIN) -->
+        <a class="choice foto"
+           href="URL_TALLY_FOTO"
+           target="_blank" rel="noopener">
           <div class="choice-content">
             <div class="choice-title">Album Fotografico</div>
             <div class="choice-action">
