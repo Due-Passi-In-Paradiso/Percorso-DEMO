@@ -2,165 +2,214 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <title>Diario delle Memorie – Due Passi in Paradiso</title>
+  <title>Diario delle Memorie - Due Passi in Paradiso</title>
 
   <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-    }
-
-    body {
+    html, body { margin:0; padding:0; height:100%; }
+    body{
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #020617;
-      color: #e5e7eb;
-      position: relative;
+      background:#020617;
+      color:#e5e7eb;
+      position:relative;
     }
 
-    /* STESSO SFONDO DELLA HOME */
-    .bg {
-      position: fixed;
-      inset: 0;
-      background: url("img/sondo.png") center center / cover no-repeat;
+    /* SFONDO */
+    .bg{
+      position:fixed;
+      inset:0;
+      background: url("img/fondo.png") center center / cover no-repeat;
       filter: blur(5px);
       transform: scale(1.05);
-      z-index: -1;
+      z-index:-1;
     }
 
-    .page {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px 16px;
-      box-sizing: border-box;
+    .page{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px 16px;
+      box-sizing:border-box;
     }
 
-    .card {
-      width: 100%;
-      max-width: 420px;
-      text-align: center;
+    .card{
+      width:100%;
+      max-width:420px;
+      text-align:center;
     }
 
-    h1 {
-      font-size: 1.4rem;
-      margin-bottom: 1.2rem;
+    h1{
+      font-size:1.4rem;
+      margin:0 0 1.2rem;
       text-shadow: 0 2px 6px rgba(0,0,0,0.6);
     }
 
-    .choices {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-      margin-bottom: 18px;
+    .choices{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+      margin-bottom:18px;
     }
 
     /* RIQUADRI GRANDI */
-    .choice {
-      position: relative;
-      height: 260px;
-      border-radius: 26px;
-      overflow: hidden;
-      color: #fff;
+    .choice{
+      position:relative;
+      height:260px;
+      border-radius:26px;
+      overflow:hidden;
+      color:#fff;
       box-shadow: 0 14px 30px rgba(0,0,0,0.45);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      cursor: pointer;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      cursor:pointer;
       -webkit-tap-highlight-color: transparent;
     }
+    .choice:active{ transform: scale(0.995); }
 
-    .choice:active {
-      transform: scale(0.995);
-    }
-
-    .choice::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
+    .choice::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background-size:cover;
+      background-position:center;
       filter: brightness(0.75);
-      z-index: 0;
+      z-index:0;
+    }
+    .choice.memorie::before{ background-image:url("img/memorie.jpg"); }
+    .choice.foto::before{ background-image:url("img/foto.jpg"); }
+
+    .choice-content{
+      position:relative;
+      z-index:1;
+      padding:14px;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      box-sizing:border-box;
     }
 
-    .choice.memorie::before { background-image: url("img/memorie.jpg"); }
-    .choice.foto::before    { background-image: url("img/foto.jpg"); }
-
-    .choice-content {
-      position: relative;
-      z-index: 1;
-      padding: 14px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .choice-title {
-      font-size: 0.8rem;
-      font-weight: 600;
-      opacity: 0.9;
-      text-align: left;
+    .choice-title{
+      font-size:0.8rem;
+      font-weight:600;
+      opacity:0.9;
+      text-align:left;
       text-shadow: 0 2px 6px rgba(0,0,0,0.6);
     }
 
-    /* BLOCCO CENTRALE (TESTO CLICK) */
-    .preview {
-      text-align: left;
-      margin-top: 10px;
-      background: rgba(15, 23, 42, 0.35);
-      border-radius: 16px;
-      padding: 14px;
+    /* BLOCCO ANTEPRIMA */
+    .preview{
+      text-align:left;
+      margin-top:10px;
+      background: rgba(15,23,42,0.35);
+      border-radius:16px;
+      padding:12px;
       backdrop-filter: blur(6px);
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size:0.9rem;
+      line-height:1.25;
+      min-height:84px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:8px;
+    }
+    .preview .hint{
+      opacity:0.9;
+      font-weight:600;
     }
 
     /* BOTTONE PICCOLO */
-    .choice-action {
-      align-self: flex-start;
+    .choice-action{
+      align-self:flex-start;
       background: rgba(15, 23, 42, 0.85);
       padding: 6px 10px;
       border-radius: 999px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.75rem;
-      font-weight: 600;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:0.75rem;
+      font-weight:600;
       box-shadow: 0 6px 14px rgba(0,0,0,0.4);
-      text-decoration: none;
-      color: #e5e7eb;
+      text-decoration:none;
+      color:#e5e7eb;
+    }
+    .plus{
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:#22c55e;
+      color:#052e16;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:800;
+      font-size:0.9rem;
+      line-height:1;
+      flex:0 0 auto;
     }
 
-    .plus {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #22c55e;
-      color: #052e16;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 0.9rem;
-      line-height: 1;
-    }
-
-    .home {
-      display: inline-block;
-      margin-top: 6px;
-      padding: 10px 16px;
-      border-radius: 999px;
+    .home{
+      display:inline-block;
+      margin-top:6px;
+      padding:10px 16px;
+      border-radius:999px;
       background: rgba(15, 23, 42, 0.65);
-      color: #e5e7eb;
-      text-decoration: none;
-      font-size: 0.85rem;
+      color:#e5e7eb;
+      text-decoration:none;
+      font-size:0.85rem;
       box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+    }
+
+    /* ====== STILI ANTEPRIME MEMORIE ====== */
+    .mem-line{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .mem-meta{
+      font-size:0.75rem;
+      opacity:0.85;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .mem-text{
+      font-size:0.85rem;
+      opacity:0.95;
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+
+    /* ====== STILI ANTEPRIME FOTO ====== */
+    .thumbs{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:8px;
+    }
+    .thumb{
+      width:100%;
+      aspect-ratio: 1 / 1;
+      border-radius:12px;
+      overflow:hidden;
+      background: rgba(15,23,42,0.25);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+    }
+    .thumb img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .small-note{
+      font-size:0.75rem;
+      opacity:0.8;
     }
   </style>
 </head>
@@ -179,14 +228,15 @@
           <div class="choice-content">
             <div class="choice-title">Memorie</div>
 
-            <div class="preview">
-              Leggi i ricordi
+            <div class="preview" id="memPreview">
+              <div class="hint">Leggi i ricordi</div>
+              <div class="small-note">Caricamento anteprima…</div>
             </div>
 
             <a class="choice-action"
-               href="https://tally.so/r/BzpGMe"
-               target="_blank" rel="noopener"
-               onclick="event.stopPropagation();">
+              href="https://tally.so/r/BzpGMe"
+              target="_blank" rel="noopener"
+              onclick="event.stopPropagation();">
               <div class="plus">+</div>
               <span>Scrivi un tuo ricordo</span>
             </a>
@@ -198,14 +248,15 @@
           <div class="choice-content">
             <div class="choice-title">Album Fotografico</div>
 
-            <div class="preview">
-              Vedi le foto
+            <div class="preview" id="fotoPreview">
+              <div class="hint">Vedi le foto</div>
+              <div class="small-note">Caricamento anteprima…</div>
             </div>
 
             <a class="choice-action"
-               href="https://tally.so/r/aQ4B7Z"
-               target="_blank" rel="noopener"
-               onclick="event.stopPropagation();">
+              href="https://tally.so/r/aQ4B7Z"
+              target="_blank" rel="noopener"
+              onclick="event.stopPropagation();">
               <div class="plus">+</div>
               <span>Aggiungi le tue foto</span>
             </a>
@@ -217,5 +268,166 @@
       <a class="home" href="index.html">← Torna alla home</a>
     </div>
   </div>
+
+  <script>
+    const RICORDI_CSV_URL = "data/ricordi.csv";
+    const FOTO_JSON_URL   = "data/foto.json";
+
+    // CSV parser robusto (virgolette, virgole nel testo, newline)
+    function parseCSV(text) {
+      const rows = [];
+      let row = [];
+      let field = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        const n = text[i + 1];
+
+        if (inQuotes) {
+          if (c === '"' && n === '"') { field += '"'; i++; }
+          else if (c === '"') { inQuotes = false; }
+          else { field += c; }
+        } else {
+          if (c === '"') inQuotes = true;
+          else if (c === ',') { row.push(field); field = ""; }
+          else if (c === '\r' && n === '\n') { row.push(field); rows.push(row); row = []; field = ""; i++; }
+          else if (c === '\n' || c === '\r') { row.push(field); rows.push(row); row = []; field = ""; }
+          else { field += c; }
+        }
+      }
+      row.push(field);
+      rows.push(row);
+
+      while (rows.length && rows[rows.length - 1].every(v => (v ?? "").trim() === "")) rows.pop();
+      return rows;
+    }
+
+    function toObjects(rows) {
+      if (!rows.length) return [];
+      const headers = rows[0].map(h => (h ?? "").trim());
+      const data = [];
+
+      for (let i = 1; i < rows.length; i++) {
+        const r = rows[i];
+        const obj = {};
+        for (let j = 0; j < headers.length; j++) {
+          const key = headers[j] || `__col${j}`;
+          obj[key] = (r[j] ?? "");
+        }
+        data.push(obj);
+      }
+      return data;
+    }
+
+    function formatDateIT(submittedAt) {
+      // "2026-02-21 22:39:44" -> "21/02/2026"
+      if (!submittedAt) return "";
+      const s = String(submittedAt).trim().replace(" ", "T");
+      const d = new Date(s);
+      if (Number.isNaN(d.getTime())) return submittedAt;
+      return d.toLocaleDateString("it-IT", { day:"2-digit", month:"2-digit", year:"numeric" });
+    }
+
+    async function loadMemPreview() {
+      const box = document.getElementById("memPreview");
+      try {
+        const res = await fetch(RICORDI_CSV_URL, { cache: "no-store" });
+        if (!res.ok) throw new Error("CSV non trovato");
+        const csvText = await res.text();
+
+        const rows = parseCSV(csvText);
+        const objs = toObjects(rows);
+
+        const items = objs
+          .map(o => ({
+            submittedAt: (o["Submitted at"] || "").trim(),
+            name: (o["Il tuo nome (opzionale)"] || "").trim() || "Anonimo",
+            text: (o["Il tuo ricordo"] || "").trim()
+          }))
+          .filter(x => x.submittedAt && x.text)
+          .sort((a,b) => String(b.submittedAt).localeCompare(String(a.submittedAt)))
+          .slice(0, 3);
+
+        if (!items.length) {
+          box.innerHTML = `
+            <div class="hint">Leggi i ricordi</div>
+            <div class="small-note">Nessun ricordo pubblicato.</div>
+          `;
+          return;
+        }
+
+        const lines = items.map(m => `
+          <div class="mem-line">
+            <div class="mem-meta">${m.name} · ${formatDateIT(m.submittedAt)}</div>
+            <div class="mem-text">${escapeHtml(m.text)}</div>
+          </div>
+        `).join("");
+
+        box.innerHTML = `
+          <div class="hint">Ultimi ricordi</div>
+          ${lines}
+        `;
+      } catch (e) {
+        box.innerHTML = `
+          <div class="hint">Leggi i ricordi</div>
+          <div class="small-note">Anteprima non disponibile.</div>
+        `;
+        console.error(e);
+      }
+    }
+
+    async function loadFotoPreview() {
+      const box = document.getElementById("fotoPreview");
+      try {
+        const res = await fetch(FOTO_JSON_URL, { cache: "no-store" });
+        if (!res.ok) throw new Error("foto.json non trovato");
+        const data = await res.json();
+
+        const items = (Array.isArray(data) ? data : [])
+          .filter(x => x && x.file && x.date)
+          .sort((a,b) => String(b.date).localeCompare(String(a.date)))
+          .slice(0, 6);
+
+        if (!items.length) {
+          box.innerHTML = `
+            <div class="hint">Vedi le foto</div>
+            <div class="small-note">Nessuna foto pubblicata.</div>
+          `;
+          return;
+        }
+
+        const thumbs = items.map(p => `
+          <div class="thumb">
+            <img src="${p.file}" alt="Foto"
+              loading="lazy" decoding="async">
+          </div>
+        `).join("");
+
+        box.innerHTML = `
+          <div class="hint">Ultime foto</div>
+          <div class="thumbs">${thumbs}</div>
+        `;
+      } catch (e) {
+        box.innerHTML = `
+          <div class="hint">Vedi le foto</div>
+          <div class="small-note">Anteprima non disponibile.</div>
+        `;
+        console.error(e);
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#39;");
+    }
+
+    loadMemPreview();
+    loadFotoPreview();
+  </script>
 </body>
 </html>
