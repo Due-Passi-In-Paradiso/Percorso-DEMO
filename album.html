@@ -2,8 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <title>Album Fotografico – Diario delle Memorie</title>
-
+  <title>Album Fotografico - Diario delle Memorie</title>
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
@@ -64,6 +63,8 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    .pill.add { background: rgba(15, 23, 42, 0.85); }
+
     .pill .plus {
       width: 18px;
       height: 18px;
@@ -78,8 +79,6 @@
       line-height: 1;
       flex: 0 0 auto;
     }
-
-    .pill.add { background: rgba(15, 23, 42, 0.85); }
 
     .grid {
       display: grid;
@@ -106,6 +105,9 @@
       padding: 10px;
       box-sizing: border-box;
       backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      cursor: pointer;
+      user-select: none;
     }
 
     .ph img {
@@ -113,6 +115,101 @@
       height: 100%;
       object-fit: cover;
       display: block;
+    }
+
+    /* ===== Viewer fullscreen ===== */
+    .viewer {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.80);
+      display: none;
+      z-index: 9999;
+      touch-action: pan-y;
+    }
+
+    .viewer.open { display: grid; }
+
+    .viewer-inner {
+      width: min(96vw, 980px);
+      margin: auto;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 10px;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    .viewer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .viewer-btn {
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.10);
+      color: #e5e7eb;
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .viewer-stage {
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52vh;
+    }
+
+    .viewer-stage img {
+      width: 100%;
+      height: 100%;
+      max-height: 78vh;
+      object-fit: contain;
+      display: block;
+      background: rgba(0,0,0,0.15);
+    }
+
+    .viewer-meta {
+      color: rgba(229,231,235,0.9);
+      font-size: 0.95rem;
+      text-align: center;
+      line-height: 1.35;
+    }
+
+    .viewer-meta .small {
+      color: rgba(229,231,235,0.75);
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    /* frecce grandi (desktop) */
+    .viewer-nav {
+      display: none;
+    }
+    @media (min-width: 860px) {
+      .viewer-nav {
+        display: block;
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,0.18);
+        background: rgba(255,255,255,0.10);
+        color: #e5e7eb;
+        cursor: pointer;
+        z-index: 10000;
+      }
+      .viewer-nav.prev { left: 18px; }
+      .viewer-nav.next { right: 18px; }
     }
   </style>
 </head>
@@ -135,43 +232,181 @@
       </a>
     </div>
 
-    <!-- FOTO APPROVATE (per ora placeholder) -->
-    <div class="grid">
-
-      <!-- ESEMPIO (quando approvi: carichi in img/album/ e aggiungi blocchi così)
-      <div class="ph">
-        <img src="img/album/foto1.jpg" alt="Foto ricordo">
-      </div>
-      -->
-
-     <div class="ph">
-  <img src="img/album/foto001.jpg" alt="Alessio_02-01-2026">
-</div>
-    <div class="ph">
-  <img src="img/album/foto002.jpg" alt="Alessio_02-01-2026">
-</div>
-   <div class="ph">
-  <img src="img/album/foto003.jpg" alt="Alessio_02-01-2026">
-</div>
-    <div class="ph">
-  <img src="img/album/foto004.jpg" alt="Alessio_02-01-2026">
-</div><div class="ph">
-  <img src="img/album/foto005.jpg" alt="Alessio_02-01-2026">
-</div>
-    <div class="ph">
-  <img src="img/album/foto006.jpg" alt="Alessio_02-01-2026">
-</div><div class="ph">
-  <img src="img/album/foto007.jpg" alt="Alessio_02-01-2026">
-</div>
-    <div class="ph">
-  <img src="img/album/foto008.jpg" alt="Alessio_02-01-2026">
-</div><div class="ph">
-  <img src="img/album/foto009.jpg" alt="Alessio_02-01-2026">
-</div>
-    <div class="ph">
-  <img src="img/album/foto010.jpg" alt="Alessio_02-01-2026">
-</div>
-
+    <!-- griglia generata da JSON -->
+    <div class="grid" id="albumGrid">
+      <div class="ph" style="cursor:default;">Caricamento…</div>
+    </div>
   </div>
+
+  <!-- Viewer fullscreen -->
+  <div class="viewer" id="viewer" aria-hidden="true">
+    <button class="viewer-nav prev" id="bigPrev" type="button" aria-label="Precedente">‹</button>
+    <button class="viewer-nav next" id="bigNext" type="button" aria-label="Successiva">›</button>
+
+    <div class="viewer-inner">
+      <div class="viewer-top">
+        <button class="viewer-btn" id="closeBtn" type="button">Chiudi</button>
+
+        <div style="display:flex; gap:8px;">
+          <button class="viewer-btn" id="prevBtn" type="button">←</button>
+          <button class="viewer-btn" id="nextBtn" type="button">→</button>
+        </div>
+      </div>
+
+      <div class="viewer-stage" id="stage">
+        <img id="viewerImg" alt="Foto" />
+      </div>
+
+      <div class="viewer-meta" id="meta"></div>
+    </div>
+  </div>
+
+  <script>
+    const DATA_URL = "data/foto.json";
+
+    const gridEl = document.getElementById("albumGrid");
+    const viewer = document.getElementById("viewer");
+    const viewerImg = document.getElementById("viewerImg");
+    const metaEl = document.getElementById("meta");
+
+    const closeBtn = document.getElementById("closeBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const bigPrev = document.getElementById("bigPrev");
+    const bigNext = document.getElementById("bigNext");
+    const stage = document.getElementById("stage");
+
+    let items = [];
+    let currentIndex = 0;
+
+    function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function formatDate(iso){
+      if(!iso) return "";
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return iso;
+      return d.toLocaleDateString("it-IT", { year:"numeric", month:"long", day:"2-digit" });
+    }
+
+    function openViewer(index){
+      currentIndex = index;
+      const it = items[currentIndex];
+
+      viewerImg.src = it.file;
+      viewerImg.alt = it.name ? `Foto di ${it.name}` : "Foto";
+
+      const name = (it.name && it.name.trim()) ? it.name.trim() : "Anonimo";
+      const date = formatDate(it.date);
+
+      metaEl.innerHTML = `
+        <div><strong>${escapeHtml(name)}</strong> ${date ? "• " + escapeHtml(date) : ""}</div>
+      `;
+
+      viewer.classList.add("open");
+      viewer.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeViewer(){
+      viewer.classList.remove("open");
+      viewer.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    function prev(){
+      if(!items.length) return;
+      currentIndex = (currentIndex - 1 + items.length) % items.length;
+      openViewer(currentIndex);
+    }
+
+    function next(){
+      if(!items.length) return;
+      currentIndex = (currentIndex + 1) % items.length;
+      openViewer(currentIndex);
+    }
+
+    // Tastiera
+    document.addEventListener("keydown", (e) => {
+      if(!viewer.classList.contains("open")) return;
+      if(e.key === "Escape") closeViewer();
+      if(e.key === "ArrowLeft") prev();
+      if(e.key === "ArrowRight") next();
+    });
+
+    // Bottoni
+    closeBtn.addEventListener("click", closeViewer);
+    prevBtn.addEventListener("click", prev);
+    nextBtn.addEventListener("click", next);
+    bigPrev.addEventListener("click", prev);
+    bigNext.addEventListener("click", next);
+
+    // Click fuori chiude
+    viewer.addEventListener("click", (e) => {
+      if(e.target === viewer) closeViewer();
+    });
+
+    // Swipe (touch) sullo stage
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    stage.addEventListener("touchstart", (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    stage.addEventListener("touchend", (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const dx = touchEndX - touchStartX;
+      const threshold = 45;
+      if(Math.abs(dx) < threshold) return;
+      if(dx > 0) prev(); else next();
+    }, { passive: true });
+
+    async function init(){
+      try{
+        const res = await fetch(DATA_URL, { cache: "no-cache" });
+        if(!res.ok) throw new Error("Impossibile leggere data/foto.json");
+        items = await res.json();
+
+        // Ordine: più recenti in alto
+        items.sort((a,b) => (b.date || "").localeCompare(a.date || ""));
+
+        gridEl.innerHTML = "";
+
+        if(!items.length){
+          gridEl.innerHTML = `<div class="ph" style="cursor:default;">Nessuna foto ancora.</div>`;
+          return;
+        }
+
+        items.forEach((it, idx) => {
+          const box = document.createElement("div");
+          box.className = "ph";
+
+          const img = document.createElement("img");
+          img.src = it.file;
+          img.alt = it.name ? `Foto di ${it.name}` : "Foto";
+          img.loading = "lazy";
+          img.decoding = "async";
+
+          box.appendChild(img);
+          box.addEventListener("click", () => openViewer(idx));
+
+          gridEl.appendChild(box);
+        });
+
+      }catch(err){
+        gridEl.innerHTML = `<div class="ph" style="cursor:default;">Errore caricamento album.</div>`;
+        console.error(err);
+      }
+    }
+
+    init();
+  </script>
 </body>
 </html>
