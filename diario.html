@@ -20,9 +20,17 @@
     .bg{
       position:fixed;
       inset:0;
-      background: url("img/fondo.png") center center / cover no-repeat;
-      filter: blur(5px);
+      background: url("img/sfondo_02.png") center center / cover no-repeat;
+      filter: blur(5px) brightness(1.05);
       transform: scale(1.05);
+      z-index:-2;
+    }
+    /* overlay leggero per leggibilità */
+    .bg::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: radial-gradient(circle at 50% 20%, rgba(2,6,23,0.15), rgba(2,6,23,0.55));
       z-index:-1;
     }
 
@@ -273,7 +281,6 @@
     const RICORDI_CSV_URL = "data/ricordi.csv";
     const FOTO_JSON_URL   = "data/foto.json";
 
-    // CSV parser robusto (virgolette, virgole nel testo, newline)
     function parseCSV(text) {
       const rows = [];
       let row = [];
@@ -321,7 +328,6 @@
     }
 
     function formatDateIT(submittedAt) {
-      // "2026-02-21 22:39:44" -> "21/02/2026"
       if (!submittedAt) return "";
       const s = String(submittedAt).trim().replace(" ", "T");
       const d = new Date(s);
@@ -365,7 +371,7 @@
         `).join("");
 
         box.innerHTML = `
-          <div class="hint">Ultimi ricordi</div>
+          <div class="hint">Leggi i ricordi</div>
           ${lines}
         `;
       } catch (e) {
@@ -405,7 +411,7 @@
         `).join("");
 
         box.innerHTML = `
-          <div class="hint">Ultime foto</div>
+          <div class="hint">Vedi le foto</div>
           <div class="thumbs">${thumbs}</div>
         `;
       } catch (e) {
