@@ -3,227 +3,195 @@
 <head>
   <meta charset="UTF-8" />
   <title>Album Fotografico - Diario delle Memorie</title>
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <style>
-    html, body { margin: 0; padding: 0; height: 100%; }
-
-    body {
+    html, body { margin:0; padding:0; height:100%; }
+    body{
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #020617;
-      color: #e5e7eb;
-      position: relative;
+      background:#020617;   /* ✅ blu scuro fisso (niente sfondo foto) */
+      color:#e5e7eb;
     }
 
-    .bg {
-      position: fixed;
-      inset: 0;
-      background: url("img/sfondo_02.png") center center / cover no-repeat;
-      filter: blur(5px);
-      transform: scale(1.05);
-      z-index: -1;
+    .page{
+      min-height:100vh;
+      padding:22px 16px 28px;
+      box-sizing:border-box;
+      max-width:980px;
+      margin:0 auto;
     }
 
-    .page {
-      min-height: 100vh;
-      padding: 22px 16px 28px;
-      box-sizing: border-box;
-      max-width: 980px;
-      margin: 0 auto;
-    }
-
-    h1 {
-      font-size: 1.35rem;
-      margin: 0 0 10px;
+    h1{
+      font-size:1.35rem;
+      margin:0 0 10px;
+      text-align:center;
       text-shadow: 0 2px 6px rgba(0,0,0,0.6);
-      text-align: center;
     }
 
-    .topbar {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
+    /* TOPBAR sticky */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      padding: 10px 0 12px;
       margin: 10px 0 16px;
+      background: linear-gradient(to bottom, rgba(2,6,23,0.92), rgba(2,6,23,0.0));
+      backdrop-filter: blur(6px);
     }
 
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
       padding: 10px 14px;
-      border-radius: 999px;
+      border-radius:999px;
       background: rgba(15, 23, 42, 0.70);
-      color: #e5e7eb;
-      text-decoration: none;
+      color:#e5e7eb;
+      text-decoration:none;
       box-shadow: 0 6px 14px rgba(0,0,0,0.35);
-      font-weight: 600;
-      font-size: 0.85rem;
+      font-weight:700;
+      font-size:0.85rem;
       -webkit-tap-highlight-color: transparent;
     }
-
-    .pill.add { background: rgba(15, 23, 42, 0.85); }
-
-    .pill .plus {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: #22c55e;
-      color: #052e16;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 0.95rem;
-      line-height: 1;
-      flex: 0 0 auto;
+    .pill.add{ background: rgba(15, 23, 42, 0.85); }
+    .pill .plus{
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:#22c55e;
+      color:#052e16;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      font-size:0.95rem;
+      line-height:1;
+      flex:0 0 auto;
     }
 
-    .grid {
-      display: grid;
+    /* GRIGLIA */
+    .grid{
+      display:grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
     }
-
-    @media (min-width: 720px) {
-      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    @media (min-width: 720px){
+      .grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
 
-    .ph {
-      background: rgba(15, 23, 42, 0.55);
+    .ph{
       border-radius: 16px;
+      overflow:hidden;                 /* ✅ niente bordi/uscite */
       aspect-ratio: 1 / 1;
-      overflow: hidden;
+      background: rgba(15, 23, 42, 0.55);
       box-shadow: 0 8px 16px rgba(0,0,0,0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: rgba(229,231,235,0.85);
-      font-size: 0.9rem;
-      text-align: center;
-      padding: 10px;
-      box-sizing: border-box;
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
+      position: relative;
       cursor: pointer;
-      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .ph img {
+    /* ✅ immagine riempie completamente */
+    .ph img{
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      margin: 0;
+      padding: 0;
     }
 
-    /* ===== Viewer fullscreen ===== */
-    .viewer {
+    /* MODAL */
+    .modal{
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.80);
-      display: none;
-      z-index: 9999;
-      touch-action: pan-y;
-    }
-
-    .viewer.open { display: grid; }
-
-    .viewer-inner {
-      width: min(96vw, 980px);
-      margin: auto;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 10px;
-      padding: 12px;
+      background: rgba(0,0,0,0.78);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index: 200;
+      padding: 14px;
       box-sizing: border-box;
     }
+    .modal.open{ display:flex; }
 
-    .viewer-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .viewer-btn {
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.10);
-      color: #e5e7eb;
-      border-radius: 999px;
-      padding: 10px 12px;
-      font-size: 0.9rem;
-      cursor: pointer;
-    }
-
-    .viewer-stage {
+    .viewer{
+      width: min(980px, 100%);
+      max-height: 90vh;
+      background: rgba(2,6,23,0.92);
       border-radius: 18px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(0,0,0,0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 52vh;
+      overflow:hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      position: relative;
     }
 
-    .viewer-stage img {
+    .viewer img{
       width: 100%;
-      height: 100%;
-      max-height: 78vh;
+      height: 70vh;
+      max-height: 70vh;
       object-fit: contain;
-      display: block;
-      background: rgba(0,0,0,0.15);
+      display:block;
+      background: #000;
     }
 
-    .viewer-meta {
-      color: rgba(229,231,235,0.9);
-      font-size: 0.95rem;
-      text-align: center;
-      line-height: 1.35;
+    .viewer-footer{
+      padding: 12px 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      font-size: 0.9rem;
+      opacity: 0.95;
+    }
+    .meta{
+      overflow:hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    .viewer-meta .small {
-      color: rgba(229,231,235,0.75);
-      font-size: 0.85rem;
-      margin-top: 4px;
+    .navbtn{
+      border: 0;
+      background: rgba(15, 23, 42, 0.85);
+      color:#e5e7eb;
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 800;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.35);
     }
+    .navbtn:active{ transform: scale(0.99); }
 
-    /* frecce grandi (desktop) */
-    .viewer-nav {
-      display: none;
-    }
-    @media (min-width: 860px) {
-      .viewer-nav {
-        display: block;
-        position: fixed;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 52px;
-        height: 52px;
-        border-radius: 50%;
-        border: 1px solid rgba(255,255,255,0.18);
-        background: rgba(255,255,255,0.10);
-        color: #e5e7eb;
-        cursor: pointer;
-        z-index: 10000;
-      }
-      .viewer-nav.prev { left: 18px; }
-      .viewer-nav.next { right: 18px; }
+    .closebtn{
+      position:absolute;
+      top: 10px;
+      right: 10px;
+      border: 0;
+      background: rgba(15, 23, 42, 0.85);
+      color:#e5e7eb;
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      cursor:pointer;
+      font-size: 18px;
+      font-weight: 900;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.35);
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
   </style>
 </head>
 
 <body>
-  <div class="bg"></div>
-
   <div class="page">
     <h1>Album Fotografico</h1>
 
     <div class="topbar">
       <a class="pill" href="diario.html">← Torna al Diario</a>
 
-      <!-- SOLO questo apre Tally -->
       <a class="pill add"
          href="https://tally.so/r/aQ4B7Z"
          target="_blank" rel="noopener">
@@ -232,181 +200,142 @@
       </a>
     </div>
 
-    <!-- griglia generata da JSON -->
-    <div class="grid" id="albumGrid">
-      <div class="ph" style="cursor:default;">Caricamento…</div>
-    </div>
+    <div id="grid" class="grid"></div>
   </div>
 
-  <!-- Viewer fullscreen -->
-  <div class="viewer" id="viewer" aria-hidden="true">
-    <button class="viewer-nav prev" id="bigPrev" type="button" aria-label="Precedente">‹</button>
-    <button class="viewer-nav next" id="bigNext" type="button" aria-label="Successiva">›</button>
-
-    <div class="viewer-inner">
-      <div class="viewer-top">
-        <button class="viewer-btn" id="closeBtn" type="button">Chiudi</button>
-
-        <div style="display:flex; gap:8px;">
-          <button class="viewer-btn" id="prevBtn" type="button">←</button>
-          <button class="viewer-btn" id="nextBtn" type="button">→</button>
-        </div>
+  <!-- MODAL -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="viewer" id="viewer">
+      <button class="closebtn" id="closeBtn" aria-label="Chiudi">✕</button>
+      <img id="bigImg" src="" alt="">
+      <div class="viewer-footer">
+        <button class="navbtn" id="prevBtn">←</button>
+        <div class="meta" id="bigMeta"></div>
+        <button class="navbtn" id="nextBtn">→</button>
       </div>
-
-      <div class="viewer-stage" id="stage">
-        <img id="viewerImg" alt="Foto" />
-      </div>
-
-      <div class="viewer-meta" id="meta"></div>
     </div>
   </div>
 
   <script>
-    const DATA_URL = "data/foto.json";
-
-    const gridEl = document.getElementById("albumGrid");
-    const viewer = document.getElementById("viewer");
-    const viewerImg = document.getElementById("viewerImg");
-    const metaEl = document.getElementById("meta");
-
-    const closeBtn = document.getElementById("closeBtn");
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const bigPrev = document.getElementById("bigPrev");
-    const bigNext = document.getElementById("bigNext");
-    const stage = document.getElementById("stage");
-
+    const FOTO_JSON_URL = "data/foto.json";
     let items = [];
-    let currentIndex = 0;
+    let currentIndex = -1;
 
     function escapeHtml(str){
-      return String(str ?? "")
+      return String(str)
         .replaceAll("&","&amp;")
         .replaceAll("<","&lt;")
         .replaceAll(">","&gt;")
         .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+        .replaceAll("'","&#39;");
     }
 
-    function formatDate(iso){
-      if(!iso) return "";
-      const d = new Date(iso);
-      if (Number.isNaN(d.getTime())) return iso;
-      return d.toLocaleDateString("it-IT", { year:"numeric", month:"long", day:"2-digit" });
-    }
+    function openModal(idx){
+      currentIndex = idx;
+      const p = items[currentIndex];
+      const modal = document.getElementById("modal");
+      const img = document.getElementById("bigImg");
+      const meta = document.getElementById("bigMeta");
 
-    function openViewer(index){
-      currentIndex = index;
-      const it = items[currentIndex];
+      img.src = p.file;
+      img.alt = "Foto";
+      meta.textContent = `${p.name || "Anonimo"} · ${p.date || ""}`;
 
-      viewerImg.src = it.file;
-      viewerImg.alt = it.name ? `Foto di ${it.name}` : "Foto";
-
-      const name = (it.name && it.name.trim()) ? it.name.trim() : "Anonimo";
-      const date = formatDate(it.date);
-
-      metaEl.innerHTML = `
-        <div><strong>${escapeHtml(name)}</strong> ${date ? "• " + escapeHtml(date) : ""}</div>
-      `;
-
-      viewer.classList.add("open");
-      viewer.setAttribute("aria-hidden", "false");
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
     }
 
-    function closeViewer(){
-      viewer.classList.remove("open");
-      viewer.setAttribute("aria-hidden", "true");
+    function closeModal(){
+      const modal = document.getElementById("modal");
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
     }
 
-    function prev(){
-      if(!items.length) return;
-      currentIndex = (currentIndex - 1 + items.length) % items.length;
-      openViewer(currentIndex);
-    }
-
     function next(){
-      if(!items.length) return;
-      currentIndex = (currentIndex + 1) % items.length;
-      openViewer(currentIndex);
+      if (!items.length) return;
+      openModal((currentIndex + 1) % items.length);
+    }
+    function prev(){
+      if (!items.length) return;
+      openModal((currentIndex - 1 + items.length) % items.length);
     }
 
-    // Tastiera
-    document.addEventListener("keydown", (e) => {
-      if(!viewer.classList.contains("open")) return;
-      if(e.key === "Escape") closeViewer();
-      if(e.key === "ArrowLeft") prev();
-      if(e.key === "ArrowRight") next();
-    });
+    async function loadAlbum(){
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
 
-    // Bottoni
-    closeBtn.addEventListener("click", closeViewer);
-    prevBtn.addEventListener("click", prev);
-    nextBtn.addEventListener("click", next);
-    bigPrev.addEventListener("click", prev);
-    bigNext.addEventListener("click", next);
-
-    // Click fuori chiude
-    viewer.addEventListener("click", (e) => {
-      if(e.target === viewer) closeViewer();
-    });
-
-    // Swipe (touch) sullo stage
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    stage.addEventListener("touchstart", (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-    }, { passive: true });
-
-    stage.addEventListener("touchend", (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      const dx = touchEndX - touchStartX;
-      const threshold = 45;
-      if(Math.abs(dx) < threshold) return;
-      if(dx > 0) prev(); else next();
-    }, { passive: true });
-
-    async function init(){
       try{
-        const res = await fetch(DATA_URL, { cache: "no-cache" });
-        if(!res.ok) throw new Error("Impossibile leggere data/foto.json");
-        items = await res.json();
+        const res = await fetch(FOTO_JSON_URL, { cache: "no-store" });
+        if (!res.ok) throw new Error("foto.json non trovato");
+        const data = await res.json();
 
-        // Ordine: più recenti in alto
-        items.sort((a,b) => (b.date || "").localeCompare(a.date || ""));
+        items = (Array.isArray(data) ? data : [])
+          .filter(x => x && x.file && x.date)
+          .sort((a,b) => String(b.date).localeCompare(String(a.date)));
 
-        gridEl.innerHTML = "";
-
-        if(!items.length){
-          gridEl.innerHTML = `<div class="ph" style="cursor:default;">Nessuna foto ancora.</div>`;
+        if (!items.length){
+          grid.innerHTML = `<div style="opacity:.85;">Nessuna foto pubblicata.</div>`;
           return;
         }
 
-        items.forEach((it, idx) => {
-          const box = document.createElement("div");
-          box.className = "ph";
+        const html = items.map((p, idx) => `
+          <div class="ph" data-idx="${idx}">
+            <img src="${escapeHtml(p.file)}" alt="Foto"
+                 loading="lazy" decoding="async">
+          </div>
+        `).join("");
 
-          const img = document.createElement("img");
-          img.src = it.file;
-          img.alt = it.name ? `Foto di ${it.name}` : "Foto";
-          img.loading = "lazy";
-          img.decoding = "async";
+        grid.innerHTML = html;
 
-          box.appendChild(img);
-          box.addEventListener("click", () => openViewer(idx));
-
-          gridEl.appendChild(box);
+        // click su miniatura
+        grid.querySelectorAll(".ph").forEach(el => {
+          el.addEventListener("click", () => {
+            const idx = Number(el.getAttribute("data-idx"));
+            openModal(idx);
+          });
         });
 
-      }catch(err){
-        gridEl.innerHTML = `<div class="ph" style="cursor:default;">Errore caricamento album.</div>`;
-        console.error(err);
+      } catch(e){
+        console.error(e);
+        grid.innerHTML = `<div style="opacity:.85;">Anteprima non disponibile.</div>`;
       }
     }
 
-    init();
+    // controlli modal
+    document.getElementById("closeBtn").addEventListener("click", closeModal);
+    document.getElementById("nextBtn").addEventListener("click", next);
+    document.getElementById("prevBtn").addEventListener("click", prev);
+
+    // chiudi cliccando fuori
+    document.getElementById("modal").addEventListener("click", (e) => {
+      if (e.target.id === "modal") closeModal();
+    });
+
+    // tastiera
+    document.addEventListener("keydown", (e) => {
+      const modalOpen = document.getElementById("modal").classList.contains("open");
+      if (!modalOpen) return;
+      if (e.key === "Escape") closeModal();
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
+    });
+
+    // swipe mobile (semplice)
+    let touchX = null;
+    document.getElementById("viewer").addEventListener("touchstart", (e) => {
+      touchX = e.changedTouches[0].clientX;
+    }, { passive:true });
+    document.getElementById("viewer").addEventListener("touchend", (e) => {
+      if (touchX == null) return;
+      const dx = e.changedTouches[0].clientX - touchX;
+      touchX = null;
+      if (Math.abs(dx) < 40) return;
+      if (dx < 0) next(); else prev();
+    }, { passive:true });
+
+    loadAlbum();
   </script>
 </body>
 </html>
