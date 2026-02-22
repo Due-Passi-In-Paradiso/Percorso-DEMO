@@ -14,11 +14,11 @@
       position:relative;
     }
 
-    /* SFONDO */
+    /* SFONDO (uguale impostazione delle altre pagine) */
     .bg{
       position:fixed;
       inset:0;
-      background: url("img/sfondo.png") center center / cover no-repeat;
+      background: url("img/sfondo_02.jpg") center center / cover no-repeat;
       filter: blur(6px) brightness(1.05);
       transform: scale(1.05);
       z-index:-2;
@@ -118,22 +118,18 @@
       backdrop-filter: blur(6px);
       box-sizing:border-box;
 
-      /* IMPORTANTI per non far "sbordare" le foto */
-      overflow:hidden;
-      min-height:120px;
-
-      /* mette in secondo piano rispetto ai bottoni */
+      overflow:hidden;      /* IMPORTANTISSIMO: niente sbordi */
+      min-height:110px;     /* un filo più compatta */
       opacity:0.95;
     }
 
-    /* Spazio e separazione tra preview e bottone */
     .actions{
       margin-top:12px;
       display:flex;
       justify-content:flex-start;
     }
 
-    /* BOTTONE PICCOLO */
+    /* BOTTONE */
     .choice-action{
       align-self:flex-start;
       background: rgba(15, 23, 42, 0.85);
@@ -148,9 +144,8 @@
       text-decoration:none;
       color:#e5e7eb;
       -webkit-tap-highlight-color: transparent;
-
       position:relative;
-      z-index:2; /* sempre sopra alle anteprime */
+      z-index:2;
     }
 
     .plus{
@@ -206,16 +201,13 @@
       overflow:hidden;
     }
 
-    /* ====== ANTEPRIME FOTO ====== */
+    /* ====== ANTEPRIME FOTO (3 miniature) ====== */
     .thumbs{
       display:grid;
       grid-template-columns: repeat(3, 1fr);
       gap:8px;
-
-      /* vincola la griglia dentro la box scura */
       width:100%;
     }
-
     .thumb{
       width:100%;
       aspect-ratio: 1 / 1;
@@ -239,7 +231,7 @@
     @media (min-width: 720px){
       h1{ font-size:1.9rem; }
       .choice{ min-height:270px; }
-      .preview-box{ min-height:130px; }
+      .preview-box{ min-height:120px; }
     }
   </style>
 </head>
@@ -259,7 +251,6 @@
             <div>
               <div class="choice-title">Ricordi</div>
 
-              <!-- anteprima ricordi -->
               <div class="preview-box" id="memPreview">
                 <div class="small-note">Caricamento anteprima…</div>
               </div>
@@ -283,7 +274,6 @@
             <div>
               <div class="choice-title">Album Fotografico</div>
 
-              <!-- anteprima foto -->
               <div class="preview-box" id="fotoPreview">
                 <div class="small-note">Caricamento anteprima…</div>
               </div>
@@ -391,7 +381,7 @@
           }))
           .filter(x => x.submittedAt && x.text)
           .sort((a,b) => String(b.submittedAt).localeCompare(String(a.submittedAt)))
-          .slice(0, 3);
+          .slice(0, 2); // <-- SOLO 2 RICORDI
 
         if (!items.length){
           box.innerHTML = `<div class="small-note">Nessun ricordo pubblicato.</div>`;
@@ -422,7 +412,7 @@
         const items = (Array.isArray(data) ? data : [])
           .filter(x => x && x.file && x.date)
           .sort((a,b) => String(b.date).localeCompare(String(a.date)))
-          .slice(0, 6);
+          .slice(0, 3); // <-- SOLO 3 FOTO
 
         if (!items.length){
           box.innerHTML = `<div class="small-note">Nessuna foto pubblicata.</div>`;
@@ -435,7 +425,6 @@
           </div>
         `).join("");
 
-        /* IMPORTANTE: le thumbs stanno dentro .preview-box che ha overflow:hidden */
         box.innerHTML = `<div class="thumbs">${thumbs}</div>`;
       } catch(e){
         box.innerHTML = `<div class="small-note">Anteprima non disponibile.</div>`;
