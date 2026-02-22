@@ -1,194 +1,274 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<title>Memorie - Diario delle Memorie</title>
+  <meta charset="UTF-8" />
+  <title>Ricordi - Diario delle Memorie</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <style>
+    html, body { margin:0; padding:0; height:100%; }
+    body{
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color:#e5e7eb;
+      background: transparent; /* IMPORTANT: non coprire lo sfondo */
+    }
 
-<style>
-html,body{
-  margin:0; padding:0; height:100%;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:#020617; color:#e5e7eb;
-}
-.bg{
-  position:fixed; inset:0;
-  background:url("img/sfondo_02.png") center/cover no-repeat;
-  filter:blur(5px); transform:scale(1.05);
-  z-index:-1;
-}
-.page{ max-width:820px; margin:auto; padding:22px 16px 40px; }
-h1{ text-align:center; margin-bottom:10px; }
+    /* SFONDO */
+    .bg{
+      position: fixed;
+      inset: 0;
+      background: url("img/sfondo_02.png") center center / cover no-repeat;
+      filter: blur(6px) brightness(1.05);
+      transform: scale(1.05);
+      z-index: -2;
+    }
+    /* overlay leggero (NON pieno blu) */
+    .bg::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: radial-gradient(circle at 50% 20%, rgba(2,6,23,0.18), rgba(2,6,23,0.52));
+      z-index:-1;
+    }
 
-.topbar{
-  display:flex; justify-content:center; gap:10px; flex-wrap:wrap;
-  margin-bottom:18px;
-}
-.pill{
-  display:inline-flex; align-items:center; gap:8px;
-  padding:10px 14px; border-radius:999px;
-  background:rgba(15,23,42,.7);
-  color:#e5e7eb; text-decoration:none;
-  font-weight:600; font-size:.85rem;
-  box-shadow:0 6px 14px rgba(0,0,0,.35);
-}
-.plus{
-  width:18px; height:18px; border-radius:50%;
-  background:#22c55e; color:#052e16;
-  display:flex; align-items:center; justify-content:center;
-  font-weight:800;
-}
+    .page{
+      min-height: 100vh;
+      padding: 22px 16px 28px;
+      box-sizing: border-box;
+      max-width: 820px;
+      margin: 0 auto;
+    }
 
-.list{ display:grid; gap:14px; }
-.entry{
-  background:rgba(15,23,42,.55);
-  border-radius:18px; padding:16px;
-  backdrop-filter:blur(6px);
-  box-shadow:0 8px 16px rgba(0,0,0,.35);
-}
-.meta{ opacity:.8; font-size:.82rem; margin-bottom:6px; }
-.text{ white-space:pre-wrap; line-height:1.45; }
-.empty{
-  text-align:center; padding:20px;
-  background:rgba(15,23,42,.45); border-radius:16px;
-}
-</style>
+    h1{
+      font-size: 1.35rem;
+      margin: 0 0 10px;
+      text-align: center;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    }
+
+    /* TOPBAR sticky */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display:flex;
+      justify-content:center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 10px 0 12px;
+      margin: 10px 0 16px;
+      background: linear-gradient(to bottom, rgba(2,6,23,0.72), rgba(2,6,23,0.0));
+      backdrop-filter: blur(6px);
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.70);
+      color:#e5e7eb;
+      text-decoration:none;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+      font-weight: 700;
+      font-size: 0.85rem;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pill.write{ background: rgba(15, 23, 42, 0.85); }
+    .pill .plus{
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background:#22c55e;
+      color:#052e16;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      font-size: 0.95rem;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+
+    .list{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .entry{
+      background: rgba(15, 23, 42, 0.55);
+      border-radius: 18px;
+      padding: 14px 14px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.35);
+      backdrop-filter: blur(6px);
+    }
+
+    .meta{
+      opacity: 0.85;
+      font-size: 0.82rem;
+      margin-bottom: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .text{
+      line-height: 1.45;
+      white-space: pre-wrap;
+      font-size: 0.98rem;
+    }
+
+    .empty{
+      background: rgba(15, 23, 42, 0.45);
+      border-radius: 18px;
+      padding: 16px;
+      text-align:center;
+      opacity: 0.95;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.35);
+      backdrop-filter: blur(6px);
+    }
+  </style>
 </head>
 
 <body>
-<div class="bg"></div>
+  <div class="bg"></div>
 
-<div class="page">
-  <h1>Memorie</h1>
+  <div class="page">
+    <h1>Ricordi</h1>
 
-  <div class="topbar">
-    <a class="pill" href="diario.html">← Torna al Diario</a>
+    <div class="topbar">
+      <a class="pill" href="diario.html">← Torna al Diario</a>
 
-    <!-- SOLO questo apre Tally -->
-    <a class="pill"
-      href="https://tally.so/r/BzpGMe"
-      target="_blank" rel="noopener">
-      <div class="plus">+</div>
-      Scrivi un tuo ricordo
-    </a>
+      <a class="pill write"
+         href="https://tally.so/r/BzpGMe"
+         target="_blank" rel="noopener">
+        <span class="plus">+</span>
+        <span>Scrivi un tuo ricordo</span>
+      </a>
+    </div>
+
+    <div id="list" class="list">
+      <div class="empty">Caricamento…</div>
+    </div>
   </div>
 
-  <div id="memorie" class="list">
-    <div class="empty">Caricamento memorie…</div>
-  </div>
-</div>
+  <script>
+    const RICORDI_CSV_URL = "data/ricordi.csv";
 
-<script>
-  const CSV_URL = "data/ricordi.csv";
+    function parseCSV(text){
+      const rows = [];
+      let row = [];
+      let field = "";
+      let inQuotes = false;
 
-  // Parser CSV robusto (virgolette, virgole nel testo, newline)
-  function parseCSV(text) {
-    const rows = [];
-    let row = [];
-    let field = "";
-    let inQuotes = false;
+      for (let i=0; i<text.length; i++){
+        const c = text[i];
+        const n = text[i+1];
 
-    for (let i = 0; i < text.length; i++) {
-      const c = text[i];
-      const n = text[i + 1];
+        if (inQuotes){
+          if (c === '"' && n === '"'){ field += '"'; i++; }
+          else if (c === '"'){ inQuotes = false; }
+          else { field += c; }
+        } else {
+          if (c === '"'){ inQuotes = true; }
+          else if (c === ','){ row.push(field); field = ""; }
+          else if (c === '\r' && n === '\n'){ row.push(field); rows.push(row); row=[]; field=""; i++; }
+          else if (c === '\n' || c === '\r'){ row.push(field); rows.push(row); row=[]; field=""; }
+          else { field += c; }
+        }
+      }
+      row.push(field);
+      rows.push(row);
 
-      if (inQuotes) {
-        if (c === '"' && n === '"') { field += '"'; i++; }
-        else if (c === '"') { inQuotes = false; }
-        else { field += c; }
-      } else {
-        if (c === '"') inQuotes = true;
-        else if (c === ',') { row.push(field); field = ""; }
-        else if (c === '\r' && n === '\n') { row.push(field); rows.push(row); row = []; field = ""; i++; }
-        else if (c === '\n' || c === '\r') { row.push(field); rows.push(row); row = []; field = ""; }
-        else { field += c; }
+      while (rows.length && rows[rows.length-1].every(v => (v ?? "").trim() === "")) rows.pop();
+      return rows;
+    }
+
+    function toObjects(rows){
+      if (!rows.length) return [];
+      const headers = rows[0].map(h => (h ?? "").trim());
+      const data = [];
+      for (let i=1; i<rows.length; i++){
+        const r = rows[i];
+        const obj = {};
+        for (let j=0; j<headers.length; j++){
+          const key = headers[j] || `__col${j}`;
+          obj[key] = (r[j] ?? "");
+        }
+        data.push(obj);
+      }
+      return data;
+    }
+
+    function escapeHtml(str){
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#39;");
+    }
+
+    // ✅ SOLO DATA (senza orario)
+    function formatDateOnly(submittedAt){
+      if (!submittedAt) return "";
+      const s = String(submittedAt).trim().replace(" ", "T");
+      const d = new Date(s);
+      if (Number.isNaN(d.getTime())){
+        // fallback: prova a troncare "YYYY-MM-DD HH:mm:ss" -> "YYYY-MM-DD"
+        return String(submittedAt).trim().split(" ")[0];
+      }
+      return d.toLocaleDateString("it-IT", { day:"2-digit", month:"2-digit", year:"numeric" });
+    }
+
+    async function loadRicordi(){
+      const root = document.getElementById("list");
+      try{
+        const res = await fetch(RICORDI_CSV_URL, { cache: "no-store" });
+        if (!res.ok) throw new Error("CSV non trovato");
+        const csvText = await res.text();
+
+        const rows = parseCSV(csvText);
+        const objs = toObjects(rows);
+
+        const items = objs
+          .map(o => ({
+            submittedAt: (o["Submitted at"] || "").trim(),
+            name: ((o["Il tuo nome (opzionale)"] || "").trim() || "Anonimo"),
+            text: ((o["Il tuo ricordo"] || "").trim())
+          }))
+          .filter(x => x.submittedAt && x.text)
+          .sort((a,b) => String(b.submittedAt).localeCompare(String(a.submittedAt)));
+
+        if (!items.length){
+          root.innerHTML = `
+            <div class="empty">
+              Qui compariranno i ricordi approvati.<br>
+              Per ora non ce ne sono.
+            </div>`;
+          return;
+        }
+
+        root.innerHTML = items.map(m => `
+          <div class="entry">
+            <div class="meta">${escapeHtml(m.name)} · ${escapeHtml(formatDateOnly(m.submittedAt))}</div>
+            <div class="text">${escapeHtml(m.text)}</div>
+          </div>
+        `).join("");
+
+      } catch(e){
+        console.error(e);
+        root.innerHTML = `
+          <div class="empty">
+            Impossibile caricare i ricordi.<br>
+            Controlla che <b>data/ricordi.csv</b> esista e sia pubblico.
+          </div>`;
       }
     }
-    row.push(field);
-    rows.push(row);
 
-    while (rows.length && rows[rows.length - 1].every(v => (v ?? "").trim() === "")) rows.pop();
-    return rows;
-  }
-
-  function toObjects(rows) {
-    if (!rows.length) return [];
-    const headers = rows[0].map(h => (h ?? "").trim());
-    const data = [];
-
-    for (let i = 1; i < rows.length; i++) {
-      const r = rows[i];
-      const obj = {};
-      for (let j = 0; j < headers.length; j++) {
-        const key = headers[j] || `__col${j}`;
-        obj[key] = (r[j] ?? "");
-      }
-      data.push(obj);
-    }
-    return data;
-  }
-
-  function formatDateTime(submittedAt) {
-    // "2026-02-21 22:39:44" -> "21/02/2026 · 22:39"
-    if (!submittedAt) return "";
-    const s = String(submittedAt).trim().replace(" ", "T");
-    const d = new Date(s);
-    if (Number.isNaN(d.getTime())) return submittedAt;
-
-    const dateIT = d.toLocaleDateString("it-IT", { day:"2-digit", month:"2-digit", year:"numeric" });
-    const timeIT = d.toLocaleTimeString("it-IT", { hour:"2-digit", minute:"2-digit" });
-    return `${dateIT} · ${timeIT}`;
-  }
-
-  async function loadMemorie() {
-    const container = document.getElementById("memorie");
-
-    try {
-      const res = await fetch(CSV_URL, { cache:"no-store" });
-      if (!res.ok) throw new Error("Impossibile leggere data/ricordi.csv");
-      const csvText = await res.text();
-
-      const rows = parseCSV(csvText);
-      const objs = toObjects(rows);
-
-      // Mappa colonne dal tuo Google Sheet
-      const items = objs
-        .map(o => ({
-          submittedAt: (o["Submitted at"] || "").trim(),
-          name: (o["Il tuo nome (opzionale)"] || "").trim() || "Anonimo",
-          text: (o["Il tuo ricordo"] || "").trim()
-        }))
-        // Ordine: più recenti prima (il formato YYYY-MM-DD HH:MM:SS ordina bene come stringa)
-        .sort((a,b) => String(b.submittedAt).localeCompare(String(a.submittedAt)));
-
-      if (!items.length) {
-        container.innerHTML = '<div class="empty">Nessun ricordo pubblicato.</div>';
-        return;
-      }
-
-      container.innerHTML = "";
-      items.forEach(m => {
-        const el = document.createElement("div");
-        el.className = "entry";
-        el.innerHTML = `
-          <div class="meta">${m.name} · ${formatDateTime(m.submittedAt)}</div>
-          <div class="text"></div>
-        `;
-        // textContent = sicuro (gestisce bene caratteri speciali)
-        el.querySelector(".text").textContent = m.text;
-        container.appendChild(el);
-      });
-
-    } catch (e) {
-      container.innerHTML = '<div class="empty">Errore caricamento memorie.</div>';
-      console.error(e);
-    }
-  }
-
-  loadMemorie();
-</script>
-
+    loadRicordi();
+  </script>
 </body>
 </html>
