@@ -108,21 +108,28 @@ margin:0 auto;
 
 .tile{
 display:flex;
+flex-direction:column;
 align-items:center;
 justify-content:center;
 text-decoration:none;
 font-weight:700;
-font-size:0.95rem;
-padding:18px 10px;
+font-size:0.9rem;
+padding:16px 10px;
 border-radius:22px;
 box-shadow:0 10px 18px rgba(0,0,0,0.45);
 text-align:center;
 color:#000;
 user-select:none;
+gap:6px;
 }
 
 .tile:active{
 transform:scale(0.98);
+}
+
+.tile-icon{
+font-size:1.6rem;
+line-height:1;
 }
 
 /* Colori */
@@ -163,26 +170,24 @@ Percorso dedicato alla memoria di Don Pasquale Beretta che tanto amò e ci inseg
 
 <div class="grid">
 
-<a class="tile opuscolo"
-href="files/opuscolo.pdf"
-target="_blank"
-rel="noopener">
-Opuscolo Informativo
+<a class="tile opuscolo" href="files/opuscolo.pdf" target="_blank" rel="noopener">
+<div class="tile-icon">📘</div>
+<div>Opuscolo Informativo</div>
 </a>
 
-<a class="tile mappa"
-href="mappa.html">
-Mappa
+<a class="tile mappa" href="mappa.html">
+<div class="tile-icon">🗺️</div>
+<div>Mappa</div>
 </a>
 
-<a class="tile apps"
-href="apps.html">
-App di navigazione
+<a class="tile apps" href="apps.html">
+<div class="tile-icon">🧭</div>
+<div>App di navigazione</div>
 </a>
 
-<a class="tile diario"
-href="diario.html">
-Diario delle memorie
+<a class="tile diario" href="diario.html">
+<div class="tile-icon">📖</div>
+<div>Diario delle memorie</div>
 </a>
 
 </div>
